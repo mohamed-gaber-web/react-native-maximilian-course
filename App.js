@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, Button } from 'react-native';
 
 import GoalInput from './components/GoalInput';
 import GoalItem from './components/GoalItem';
@@ -7,9 +7,19 @@ import GoalItem from './components/GoalItem';
 export default function App() {
 
   const [courseGoals, setCourseGoals] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleModalOpen() {
+    setIsOpen(true)
+  }
+
+  function handleModalClose() {
+    setIsOpen(false)
+  }
 
   function handleSubmit(enteredTextInput) { 
-    setCourseGoals((currentCourses) => [...currentCourses, {text: enteredTextInput, id: Math.random().toString()}])
+    setCourseGoals((currentCourses) => [...currentCourses, { text: enteredTextInput, id: Math.random().toString() }])
+    setIsOpen(false)
   };
 
   function reomveGoalItem(id) {
@@ -21,9 +31,8 @@ export default function App() {
   return (
 
     <View style={styles.containerApp}>
-
-      <GoalInput onAddGoal={handleSubmit} />
-      
+      <Button title="Add new goal" color="red" onPress={handleModalOpen} />
+      <GoalInput modalVisible={isOpen}  onAddGoal={handleSubmit} onCancel={handleModalClose} />
       <View style={styles.textContainer}>
         <FlatList data={courseGoals} renderItem={itemData => {
           return <GoalItem text={itemData.item.text} onRemoveItemGoal={reomveGoalItem} id={itemData.item.id} />
