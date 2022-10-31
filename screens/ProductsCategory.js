@@ -27,7 +27,6 @@ function ProductsCategory({ route, navigation }) {
     );
   }
 
-  console.log(displayProductsCategory);
   return (
     <View style={styles.container}>
       <FlatList

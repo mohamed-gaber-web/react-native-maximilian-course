@@ -1,26 +1,38 @@
-import { useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { View, Image, Text, StyleSheet, Button } from "react-native";
 import IconButton from "../components/IconButton";
 
 import { Products } from "../Data/data";
+import { FavoriteContext } from "../store/context/favorite-context";
 
 function ProductDetails({ route, navigation }) {
   const productId = route.params.productId;
   const productItem = Products.find((product) => product.id === productId);
+  const favoriteProductCTX = useContext(FavoriteContext);
+  const productIsFavorite = favoriteProductCTX.favProducts.includes(productId);
 
-  function headerRightHandler() {
-    console.log("Pressed");
+  function handleChangeFavoriteProducts() {
+    if (productIsFavorite) {
+      favoriteProductCTX.removeFavorite(productId);
+    } else {
+      favoriteProductCTX.addToFavorite(productId);
+    }
+    // console.log("Pressed");
   }
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         return (
-          <IconButton onPress={headerRightHandler} name="star" color="#000" />
+          <IconButton
+            onPress={handleChangeFavoriteProducts}
+            name={productIsFavorite ? "star" : "star-outline"}
+            color="#000"
+          />
         );
       },
     });
-  }, [navigation, headerRightHandler]);
+  }, [navigation, handleChangeFavoriteProducts]);
 
   return (
     <View>
